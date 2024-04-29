@@ -1,0 +1,55 @@
+body {
+    font-size: 16px;
+    line-height: 1.6;
+    font-family: "Roboto",sans-serif;
+    padding-left: 150px;
+    color: #212121;
+    letter-spacing: .33px;
+}
+
+p {
+    font-size: 16px;
+    color: #333;
+    font-family: "Roboto",sans-serif;
+    padding-left: 15px;
+}
+
+body a {
+    color: #0091ea;
+}
+
+code {
+    font-family: monospace;
+}
+
+.code-block {
+    display: block;
+    padding: 8px;
+    overflow-x: auto;
+    color: #333;
+    background: #f8f8f8;
+}
+
+.caution-block {
+    display: block;
+    overflow-x: auto;
+    padding: 8px;
+    color: #b71c1c;
+    background: #f8f8f8;
+}
+
+.warning-block {
+    display: block;
+    overflow-x: auto;
+    padding: 8px;
+    color: #ee972b;
+    background: #f8f8f8;
+}
+
+.caution-text, .warning-text {
+    padding-left: 20px;
+}
+
+.reminder, .welcome {
+    font-weight: bold;
+}

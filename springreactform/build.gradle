@@ -1,0 +1,67 @@
+buildscript {
+  repositories {
+    maven { url "https://binrepo.target.com/artifactory/platform" }
+    maven { url "https://binrepo.target.com/artifactory/gradle" }
+    maven { url "https://binrepo.target.com/artifactory/maven-central" }
+  }
+  dependencies {
+    classpath "com.target.platform:platform-connector-gradle:4.0.4"
+  }
+}
+
+apply plugin: "com.target.platform.connector.spring-boot-webmvc"
+
+java {
+  toolchain {
+    languageVersion = JavaLanguageVersion.of(17)
+  }
+}
+
+tasks.withType(JavaCompile) {
+  options.release.set(17)
+}
+
+tasks.withType(JavaExec).configureEach {
+  javaLauncher.set(javaToolchains.launcherFor(java.toolchain))
+}
+
+mainClassName = "com.target.springreactform.Main"
+
+version = "0.0.1"
+
+jar.enabled = true
+
+String springBootVersion = "3.2.0"
+
+dependencies {
+  implementation "io.opentelemetry:opentelemetry-api:1.33.0"
+  implementation "org.springframework.boot:spring-boot-starter-actuator:$springBootVersion"
+  implementation "org.springframework.boot:spring-boot-starter-web:$springBootVersion"
+  implementation "org.springframework.boot:spring-boot-starter-log4j2:$springBootVersion"
+  annotationProcessor "org.springframework.boot:spring-boot-configuration-processor:$springBootVersion"
+  testImplementation "org.springframework.boot:spring-boot-starter-test:$springBootVersion"
+  implementation 'org.springframework.boot:spring-boot-starter-data-jpa:3.2.5'
+  compileOnly('org.projectlombok:lombok:1.18.28')
+  implementation 'org.postgresql:postgresql:42.7.3'
+}
+
+configurations.all {
+  exclude group: "ch.qos.logback"
+  exclude group: "org.springframework.boot", module: "spring-boot-starter-logging"
+  resolutionStrategy {
+    cacheChangingModulesFor 0, 'seconds'
+    resolutionStrategy.dependencySubstitution {
+      substitute module("org.bouncycastle:bcprov-jdk15on:1.70") using module("org.bouncycastle:bcprov-jdk15to18:1.77")
+    }
+  }
+}
+
+tasks.withType(Test) {
+  useJUnitPlatform()
+
+  afterSuite { desc, result ->
+    if (!desc.parent && result.testCount == 0) {
+      throw new IllegalStateException("No tests were found. Failing the build.")
+    }
+  }
+}

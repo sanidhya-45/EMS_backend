@@ -1,0 +1,7 @@
+pluginManagement {
+    repositories {
+        maven { url "https://binrepo.target.com/artifactory/platform" }
+        maven { url "https://binrepo.target.com/artifactory/gradle" }
+        maven { url "https://binrepo.target.com/artifactory/maven-central" }
+    }
+}

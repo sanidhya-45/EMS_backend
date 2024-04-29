@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv='content-type' content='text/html; charset=utf-8'/>
+    <title>Quickstart: Spring Boot WebMvc</title>
+    <link href="main.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<h1>Quickstart: Spring Boot WebMvc</h1>
+<hr>
+<h3>Quickstart</h3>
+<p><a href="/hello">Hello!</a></p>
+<p class="welcome">I am an app created by Quickstart on TAP. I come prebuilt with some helpful (but disposable) code that demonstrates TAP's platform connector capabilities, along with framework and testing.</p>
+<p>I was built with:</p>
+<ul>
+    <li><a href="https://tapdocs.prod.target.com/platformconnectors/java/">Java Platform Connector</a></li>
+    <li><a href="https://tapdocs.prod.target.com/platformconnectors/springboot/">Spring Boot Platform Connector</a></li>
+    <li><a href="https://spring.io/projects/spring-boot/">Spring Boot</a></li>
+    <li><a href="https://dev.java/">Java</a></li>
+    <li><a href="https://junit.org/junit5/docs/current/user-guide/">JUnit</a></li>
+    <li><a href="https://git.target.com/sre/opentelemetry-target-extensions">Target Opentelemetry Extensions</a></li>
+    <li>and, of course, <a href="https://tapdocs.prod.target.com/guides/quickstart/">Quickstart</a></li>
+</ul>
+<hr>
+
+<h2>Setup</h2>
+<p>Create the following configs and secrets, so I can demonstrate how you can get them.</p>
+<p>To create configs, navigate to your cluster in TAP and click on the Configs tab. Then add a configuration with a name "application.yml" of type "Platform Connector" with content:</p>
+<pre class="code-block">
+foo1: bar1
+foo2: bar2
+config:
+  - key: foo4
+    destination: /baz4
+    encoding: text
+other:
+  - key: foo5
+    destination: /baz5
+</pre>
+
+<p>To create secrets, navigate to your cluster in TAP and click on the Secrets tab. Then add a secret with a name "secret.yml" of type "Platform Connector" with content:</p>
+<pre class="code-block">
+foo2: foo2_value_from_secret.yml
+foo3: foo3_value_from_secret.yml
+</pre>
+
+<p>Create 2 more custom secret files named "foo4", "foo5". These names will ensure that they match the keys in "application.yml" under the Configs tab. The content of these new files is unimportant for demo purposes.
+    The purpose of creating these files is to demonstrate loading configs from TAP and writing them to the local file system of your running workload.</p>
+
+<p>To create a restricted secret, navigate to your cluster in TAP and click on the Secrets tab. Then add a secret with a name "db.password" of type "Custom", select the "Restricted Secret" toggle, and add content:</p>
+<pre class="code-block">
+    demoPassword
+</pre>
+
+<p class="reminder">Go to Server Groups and redeploy in order to pick up these changes in your Merged KV.</p>
+
+<hr>
+<h2>Endpoints</h2>
+
+<p>Try my endpoints...</p>
+
+<h3>General</h3>
+<dl>
+    <dt><a href="/health">/health</a></dt>
+    <dt><a href="/version">/version</a></dt>
+    <dt><a href="/application">/application</a></dt>
+    <dt><a href="/hostname">/hostname</a></dt>
+</dl>
+
+<h3>Telemetry Examples</h3>
+<dl>
+    <dt><a href="/metrics">/metrics</a></dt>
+</dl>
+
+<h3>Service Catalog</h3>
+<p>All of the service catalog endpoint path tokens default to the instance servicing the request.</p>
+<dl>
+    <dt><a href="/service-catalog/instances-for-server-group/">/service-catalog/instances-for-server-group/{serverGroup}</a></dt>
+    <dt><a href="/service-catalog/enabled-instances-for-server-group/">/service-catalog/enabled-instances-for-server-group/{serverGroup}</a></dt>
+    <dt><a href="/service-catalog/healthy-instances-for-server-group/">/service-catalog/healthy-instances-for-server-group/{serverGroup}</a></dt>
+    <dt><a href="/service-catalog/enabled/">/service-catalog/enabled/{serverGroup}</a></dt>
+    <dt><a href="/service-catalog/instances-for-cluster/">/service-catalog/instances-for-cluster/{cluster}</a></dt>
+    <dt><a href="/service-catalog/enabled-instances-for-cluster/">/service-catalog/enabled-instances-for-cluster/{cluster}</a></dt>
+    <dt><a href="/service-catalog/healthy-instances-for-cluster/">/service-catalog/healthy-instances-for-cluster/{cluster}</a></dt>
+    <dt><a href="/service-catalog/node/">/service-catalog/node/{node}</a></dt>
+    <dd>helpful reminder: you can use <code>%2f</code> to encode a forward slash in the node</dd>
+</dl>
+
+<h4>Deprecated Soon</h4>
+<p>These endpoints demonstrate functionality that will soon be deprecated. Avoid their use. They are present here to assist with migration efforts.</p>
+<dl>
+    <dt><a href="/service-catalog/instances-for-service/">/service-catalog/instances-for-service/{service}</a></dt>
+    <dt><a href="/service-catalog/enabled-instances-for-service/">/service-catalog/enabled-instances-for-service/{service}</a></dt>
+    <dt><a href="/service-catalog/healthy-instances-for-service/">/service-catalog/healthy-instances-for-service/{service}</a></dt>
+</dl>
+
+<h3>Key Value ("Config and Secrets")</h3>
+<p class="reminder">helpful reminder: you can use <code>%2f</code> to encode a forward slash in the path. try: <code>foo2</code> or <code>platform%2frestricted</code></p>
+<p class="reminder">You do not need to redeploy for the configs to be loaded to the appropriate sources.</p>
+<dl>
+    <dt><a href="/key-value/config-source/sources">/key-value/config-source/sources</a></dt><dd>this shows the sources available to me</dd>
+    <dt><a href="/key-value/config-source/cluster/">/key-value/config-source/cluster/{optionalConfigKey}</a></dt><dd>Key/Value for this cluster at REQUEST time. Note: This only provides key-value listed under "Platform Connector" file type, i.e., "application.yml" file under Configs tab and "secret.yml" under Secrets tab. This also provides all restricted secrets.</dd>
+    <dt><a href="/key-value/config-source/runtime/">/key-value/config-source/runtime/{optionalFileName}/{optionalConfigKey}</a></dt><dd>Key/Value for this cluster. Note: This only provides config files that are under the Config tab.</dd>
+</dl>
+
+<div class="warning-block">
+    <h4>For this next endpoint to work, keep in mind the following:</h4>
+    <ul class="warning-text">
+        <li>The given file must be under the Config tab.</li>
+        <li>If no file name is specified, runtime.yml is the default fallback. Using this value is discouraged, and the default is subject to change in future releases -- do not rely on it.</li>
+        <li>You will need to create files under the Secrets tab. The names of these files need to match the values of the keys in the given file. The content of these files is unimportant for the sake of our demo.</li>
+        <li>"destination" of these files is specified in the given file.</li>
+        <li>"encoding" of these files is set to "text" by default. You can set it to base64 if you like.</li>
+    </ul>
+</div>
+<p class="reminder">If this works successfully, you can execute this command using "tapctl" to verify your file is created on the file system of your application's container.</p>
+<p><code class="code-block">tapctl exec ls {instance_id} {path}</code></p>
+<dl>
+    <dt><a href="/key-value/config-source/write-file-assets/">key-value/config-source/write-file-assets/{optionalFileName}</a></dt><dd>Write out file assets to the local file system as defined in a key/value map from the given file name in this config source.</dd>
+    <dt><a href="/key-value/config-source/file/">/key-value/config-source/file/{fileName}/{optionalEncodingType}</a></dt><dd>Obtains a value with the specified encoding from the Platform as a source that can be used to provide the value to an application. If duplicate files exist between the Config and Secret tabs, the file from the Secret tab is returned.</dd>
+    <dt><a href="/key-value/config-source/merged-for-cluster/">/key-value/config-source/merged-for-cluster/{fileName}/{optionalKeys}</a></dt><dd>Key/Value pairs for this cluster. This will return null if there is no file with this name under the Config tab. If files with this name exist under both the Configs and Secrets tabs, contents of both will be returned, with any conflicts being resolved in favor of Secrets.</dd>
+</dl>
+
+<h4>Framework-Specific</h4>
+<dl>
+    <dt><a href="/key-value/spring-boot/application-context-environment/get-property/">/key-value/spring-boot/application-context-environment/get-property/{propertyName}</a></dt><dd>Spring's application context environment provides Config and Secrets. There is no hierarchy; list or map entries must be fully qualified (for example: <code>mylist.0</code>, <code>mylist.1</code>, or <code>myMap.myKey</code>). try: <code>foo1</code> or <code>platform.restricted.db.password</code></dd>
+    <dt><a href="/key-value/spring-boot/application-context-environment/contains-property/">/key-value/spring-boot/application-context-environment/contains-property/{propertyName}</a></dt><dd>In addition, you can check whether the environment contains a property at all</dd>
+</dl>
+</body>
+</html>
